@@ -17,6 +17,6 @@ class Car extends Model
     }
 
     protected $fillable = [
-        'model', 'year', 'consuming', 'registration', 'company_id', 'description', 'is_rented'
+        'model', 'year', 'consuming', 'registration', 'company_id', 'description', 'is_rented', 'imageURL'
     ];
 }

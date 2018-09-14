@@ -8,6 +8,7 @@ use App\Http\Requests\CarRequest;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Resources\Car\CarResource;
+use Illuminate\Support\Facades\Storage;
 use App\Http\Resources\Car\CarCollection;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -46,17 +47,33 @@ class CarController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(CarRequest $request)
+    public function store(Request $request)
     {
-        // Log::info($request);
-        // log::info("da vidimo da li postoji user");
-        // log::info(Auth::user());
-        // log::info("pokusavam logujem role od usera");
-        // log::info($request->user()->role);
+        //Log::info($request);
+
+         // Handle File Upload
+
+         if ($request->hasFile('image')) {
+             // Get the Filename with Extension
+             $fileNameWithExt = $request->file('image')->getClientOriginalName();
+             // Get the filename
+             $filename = pathinfo($fileNameWithExt, PATHINFO_FILENAME);
+             // Get the extension
+             $extension = $request->file('image')->getClientOriginalExtension();
+             //Filename to store
+             $fileNameToStore = $filename.'_'.time().'.'.$extension;
+
+            $path = $request->file('image')->storeAs('public/images', $fileNameToStore);
+
+            } else {
+             $fileNameToStore = "noimage.jpg";
+         }
+         
         
-        $newCar = new Car($request->all());
+        $newCar = new Car($request->except(['image']));
+        $newCar->imageURL = $fileNameToStore;
         $newCar->save();
-        return $newCar;
+        return new CarResource($newCar);
 
     }
 
@@ -92,8 +109,30 @@ class CarController extends Controller
      */
     public function update(Request $request, Car $car)
     {
-        $car->update($request->all());
+         // Handle File Upload
+
+        if ($request->hasFile('image')) {
+            // Get the Filename with Extension
+            $fileNameWithExt = $request->file('image')->getClientOriginalName();
+            // Get the filename
+            $filename = pathinfo($fileNameWithExt, PATHINFO_FILENAME);
+            // Get the extension
+            $extension = $request->file('image')->getClientOriginalExtension();
+            //Filename to store
+            $fileNameToStore = $filename.'_'.time().'.'.$extension;
+
+           $path = $request->file('image')->storeAs('public/images', $fileNameToStore);
+
+        }
+       
+        $car->update($request->except(['image']));
+        if($request->hasFile('image')) {
+            $car->imageURL = $fileNameToStore;
+        }
+        
+        $car->save();
         return new CarResource($car);
+       
     }
 
     /**
@@ -104,6 +143,10 @@ class CarController extends Controller
      */
     public function destroy(Car $car)
     {
+        if($car->imageURL != 'noimage.jpg' ) {
+            Storage::delete('public/images/'.$car->imageURL);
+        }
+
         $car->delete();
         return response(null, Response::HTTP_NO_CONTENT);
     }
