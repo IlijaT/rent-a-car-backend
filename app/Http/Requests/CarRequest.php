@@ -26,7 +26,7 @@ class CarRequest extends FormRequest
         return [
             'model' => 'required|max:55',
             'consuming' => 'required|numeric',
-            'registration' => 'unique:cars',
+            'registration' => 'required|unique:cars',
             'year' => 'required|numeric',
             'image' => 'image|nullable|max:2000',
             // 'company_id' => 'required|numeric',
