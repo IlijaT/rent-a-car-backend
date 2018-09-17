@@ -6,6 +6,7 @@ use App\Role;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 use Illuminate\Notifications\Notifiable;
 use Zizaco\Entrust\Traits\EntrustUserTrait;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable implements JWTSubject
@@ -29,14 +30,19 @@ class User extends Authenticatable implements JWTSubject
 
     public function hasAnyRoles($roles)
     {
-        foreach ($roles as $key => $value) {
-            return $this->hasRole($value);
+        if(is_array($roles)) {
+            foreach ($roles as $key => $value) {
+                return $this->hasRole($value);
+            }
         }
-        return false;
+
+        return $this->hasRole($roles);
+        
     }
   
     public function hasRole($role)
     {
+
         if ($this->role()->where('name', $role)->first()) {
             return true;
         }
