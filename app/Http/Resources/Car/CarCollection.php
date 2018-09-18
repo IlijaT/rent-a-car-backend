@@ -24,6 +24,7 @@ class CarCollection extends JsonResource
             "available" => $this->is_rented == 0 ? 'available' : 'rented',
             'image' => $this->imageURL,
             'company_id' => $this->company_id,
+            'location' => $this->company->address,
 
         ];
     }
