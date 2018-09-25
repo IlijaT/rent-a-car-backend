@@ -19,6 +19,9 @@ class CreateRentsTable extends Migration
             $table->foreign('user_id')->references('id')->on('users');
             $table->unsignedInteger('car_id');
             $table->foreign('car_id')->references('id')->on('cars');
+            $table->dateTime('start');
+            $table->dateTime('end');
+            $table->integer('total_price');
             $table->timestamps();
         });
     }

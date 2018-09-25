@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use Closure;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 
 class WorkerMiddleware
@@ -16,7 +17,9 @@ class WorkerMiddleware
      */
     public function handle($request, Closure $next)
     {
-        if (Auth::user() && !$request->user()->hasAnyRoles(['Admin', 'Owner', 'Worker'])) {
+        //Log::info(Auth::user()->role_id);
+
+        if (Auth::user() && $request->user()->role_id == 1 ) {
             return response('Insufficient permissions', 401);
         }
 

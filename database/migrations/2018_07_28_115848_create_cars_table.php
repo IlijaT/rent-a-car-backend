@@ -22,6 +22,7 @@ class CreateCarsTable extends Migration
             $table->integer('year');
             $table->integer('consuming');
             $table->text('description');
+            $table->integer('price');
             $table->string('imageURL')->nullable();
             $table->boolean('is_rented')->default(false);
             $table->timestamps();

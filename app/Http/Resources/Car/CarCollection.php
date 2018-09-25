@@ -20,6 +20,7 @@ class CarCollection extends JsonResource
             "year" => $this->year,
             'description' => $this->description,
             'consuming' => $this->consuming,
+            'price' => $this->price,
             'registration' => $this->registration,
             "available" => $this->is_rented == 0 ? 'available' : 'rented',
             'image' => $this->imageURL,
