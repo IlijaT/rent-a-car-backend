@@ -49,7 +49,7 @@ class CarController extends Controller
      */
     public function store(CarRequest $request)
     {
-        //Log::info($request);
+        //Log::info($request->except(['image']));
 
          // Handle File Upload
 
@@ -72,6 +72,7 @@ class CarController extends Controller
         
         $newCar = new Car($request->except(['image']));
         $newCar->imageURL = $fileNameToStore;
+        $newCar->price = $request->price;
         $newCar->save();
         return new CarResource($newCar);
 
@@ -129,6 +130,7 @@ class CarController extends Controller
         if($request->hasFile('image')) {
             $car->imageURL = $fileNameToStore;
         }
+        $car->price = $request->price;
         
         $car->save();
         return new CarResource($car);

@@ -20,7 +20,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::apiresource('/cars', 'CarController');
 Route::apiresource('/companies', 'CompanyController');
 Route::get('/companies/{company}/cars', 'CompanyController@getCars')->name('company.getCars');
-Route::post('/rent/{car}', 'RentController@store')->name('rent.store');
+Route::post('/rent', 'RentController@store')->name('rent.store');
 
 Route::group([
     'prefix' => 'auth'

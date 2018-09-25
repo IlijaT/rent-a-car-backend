@@ -5,8 +5,9 @@ namespace App\Http\Controllers;
 use App\Model\Car;
 use App\Model\Rent;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use App\Services\RentService;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 
 class RentController extends Controller
@@ -17,7 +18,6 @@ class RentController extends Controller
     {   
         $this->rentService = $rentService;
         $this->middleware('auth:api');
-        $this->middleware('rent:api')->only('store');
     }
 
     /**
@@ -46,15 +46,19 @@ class RentController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Car $car)
+    public function store(Request $request)
     {
     
-        $rent = $this->rentService->rentCar($car);
-       if(!$rent){
+        // Log::info($request);
+        $rent = $this->rentService->rentCar($request);
+        
+        if(!$rent){
             return response(null, Response::HTTP_BAD_REQUEST);
-       }
+        } else {
+            return $rent;
+        }
 
-       return $rent;
+       
     }
 
     /**
