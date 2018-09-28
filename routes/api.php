@@ -21,6 +21,7 @@ Route::apiresource('/cars', 'CarController');
 Route::apiresource('/companies', 'CompanyController');
 Route::get('/companies/{company}/cars', 'CompanyController@getCars')->name('company.getCars');
 Route::post('/rent', 'RentController@store')->name('rent.store');
+Route::get('/rent/{carId}', 'RentController@showCarRents')->name('rent.showCarRents');
 
 Route::group([
     'prefix' => 'auth'

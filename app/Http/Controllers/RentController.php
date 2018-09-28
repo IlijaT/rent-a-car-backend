@@ -8,6 +8,8 @@ use Illuminate\Http\Request;
 use App\Services\RentService;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Resources\Rent\RentResource;
+use App\Http\Resources\Rent\RentCollection;
 use Symfony\Component\HttpFoundation\Response;
 
 class RentController extends Controller
@@ -69,7 +71,15 @@ class RentController extends Controller
      */
     public function show(Rent $rent)
     {
-        //
+      
+    }
+
+    public function showCarRents($id)
+    {
+        $carRents = Rent::where('car_id', $id)->get();
+        return RentResource::collection($carRents);
+        // return $carRents;
+      
     }
 
     /**
