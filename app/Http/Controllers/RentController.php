@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Model\Car;
+use Carbon\Carbon;
 use App\Model\Rent;
 use Illuminate\Http\Request;
 use App\Services\RentService;
@@ -22,25 +23,7 @@ class RentController extends Controller
         $this->middleware('auth:api');
     }
 
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
+    
 
     /**
      * Store a newly created resource in storage.
@@ -63,14 +46,24 @@ class RentController extends Controller
        
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Model\Rent  $rent
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Rent $rent)
+    public function nextRentStart($car_id, $date)
     {
+        $rent = Rent::where('start', '>', $date)
+                ->where('car_id', $car_id)
+                ->first();
+
+        if($rent) {
+            $rentString= $rent->start;
+            $stringDate = explode(" ", $rentString);
+            $rentDay = Carbon::createFromFormat('Y-m-d', $stringDate[0]);
+            $previous = $rentDay->subDays(1);
+            return $previous;
+        } else {
+            $rentDay = Carbon::createFromFormat('Y-m-d', $date);
+            $oneMontLater = $rentDay->addDays(30);
+            return $oneMontLater;
+        }
+         
       
     }
 
@@ -78,7 +71,6 @@ class RentController extends Controller
     {
         $carRents = Rent::where('car_id', $id)->get();
         return RentResource::collection($carRents);
-        // return $carRents;
       
     }
 
